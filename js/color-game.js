@@ -13,6 +13,10 @@ window.onload = function() {
     var gameLevel = getClassName("game-level-num")[0];
     var level = getClassName("level")[0]
     var playAgain = getClassName("play-again")[0];
+    var colorBox = getId("color-box");
+    var levelNum = 0;
+    var times = 1;
+    var num = 2;
     var timer = null;
     var comments = [
         "基本上是瞎子！",
@@ -44,8 +48,10 @@ window.onload = function() {
 
     //点击开始按钮开始,开始计时
     starBtn.onclick = function() {
-        indexPage.style.display = "none";
         timeingStars();
+        indexPage.style.display = "none";
+        creatColorBlock();
+        setColor();
     };
 
     //暂停
@@ -62,13 +68,17 @@ window.onload = function() {
     //再来一次
     playAgain.onclick = function() {
         timeingStars();
+        num = 1;
+        levelNum = 0;
+        clickSpecial();
         overTime.style.display = "none";
         gameTime.innerHTML = 60;
-        gameLevel.innerHTML = 0;
     };
 
     //计时
     function timeingStars() {
+        gameTime.style.background = "#FD9090";
+        gameTime.style.color = "#FFCACA";
         timer = setInterval(function() {
             if(gameTime.innerHTML > 10 && gameTime.innerHTML <= 60) {
                 gameTime.innerHTML -= 1;
@@ -85,10 +95,65 @@ window.onload = function() {
         },1000);
     }
 
+    //创建颜色块
+    function creatColorBlock() {
+        colorBox.className = "row"+num;
+        for(var i = 1; i <= num*num; i++) {
+            colorBox.innerHTML += "<span></span>";
+        }
+    }
+
+    //设置随机颜色
+    function setColor() {
+        var temp = colorBox.getElementsByTagName("span");
+        var a = 15*(9-num) ==0?15:15*(9-num);
+        var randomColorR =  ~~(Math.random()*(255-a));
+        var randomColorG =  ~~(Math.random()*(255-a));
+        var randomColorb =  ~~(Math.random()*(255-a));
+        var randomBlock = temp[~~(Math.random()*temp.length)];
+        var sameColor = "rgb(" + randomColorR+","+randomColorG+","+randomColorb+")";
+        var specialColor = "rgb(" + (randomColorR+a) +","+ (randomColorG+a) +","+ (randomColorb+a) +")";
+        for(var i = 0; i < temp.length; i++) {
+            temp[i].style.background = sameColor;
+        }
+        randomBlock.style.background = specialColor;
+        randomBlock.className = "temp";
+        getClassName("temp")[0].onclick = function() {
+            clickSpecial();
+        };
+
+    }
+
+    //点击不同颜色的函数
+    function clickSpecial() {
+        if (num == 4) {
+            times == 2 ? (num++,times = 0) :(num = 4,times++);
+            console.log(times);
+        } else if (num == 5) {
+            times == 3 ? (num++,times = 0) :(num = 5,times++);
+        } else if (num == 6) {
+            times == 3 ? (num++,times = 0) :(num = 6,times++);
+        } else if (num == 7) {
+            times == 4 ? (num++,times = 0) :(num = 7,times++);
+        } else if (num == 8){
+            times == 5 ? (num++,times = 0) :(num = 8,times++);
+        } else if (num == 9) {
+            num = 9;
+        } else {
+            num++;
+        }
+        gameLevel.innerHTML = levelNum++;
+        colorBox.innerHTML = "";
+        creatColorBlock();
+        setColor();
+    }
+
+
+
     //判定辨别等级
     function JudgmentLevel() {
+        console.log(1);
         gameNum.innerHTML = gameLevel.innerHTML;
-
         if(gameLevel.innerHTML >=0 && gameLevel.innerHTML <= 15) {
             level.innerHTML = comments[0];
         } else if(gameLevel.innerHTML >= 16 && gameLevel.innerHTML <= 20) {
@@ -108,8 +173,20 @@ window.onload = function() {
         }  else {
             level.innerHTML = comments[8];
         }
-
     }
+
+
+    //设置color-box宽高
+    function setSize() {
+        var windowWidth = document.documentElement.clientWidth;
+        colorBox.style.width = windowWidth<550? windowWidth*0.95 + "px" : "500px";
+        colorBox.style.height = windowWidth<550? windowWidth*0.95 + "px" : "500px";
+    }
+    setSize();
+    window.onresize = function() {
+        setSize();
+    }
+
 
     //通过id获取
     function getId(id) {
