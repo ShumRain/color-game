@@ -69,7 +69,7 @@ window.onload = function() {
     playAgain.onclick = function() {
         timeingStars();
         num = 1;
-        levelNum = 0;
+        levelNum = -1;
         clickSpecial();
         overTime.style.display = "none";
         gameTime.innerHTML = 60;
@@ -94,6 +94,31 @@ window.onload = function() {
             }
         },1000);
     }
+
+
+    //点击不同的颜色的函数
+    function clickSpecial() {
+        if (num == 4) {
+            times == 2 ? (num++,times = 0) :(num = 4,times++);
+        } else if (num == 5) {
+            times == 3 ? (num++,times = 0) :(num = 5,times++);
+        } else if (num == 6) {
+            times == 3 ? (num++,times = 0) :(num = 6,times++);
+        } else if (num == 7) {
+            times == 4 ? (num++,times = 0) :(num = 7,times++);
+        } else if (num == 8){
+            times == 5 ? (num++,times = 0) :(num = 8,times++);
+        } else if (num == 9) {
+            num = 9;
+        } else {
+            num++;
+        }
+        gameLevel.innerHTML = ++levelNum;
+        colorBox.innerHTML = "";
+        creatColorBlock();
+        setColor();
+    }
+
 
     //创建颜色块
     function creatColorBlock() {
@@ -121,38 +146,10 @@ window.onload = function() {
         getClassName("temp")[0].onclick = function() {
             clickSpecial();
         };
-
     }
-
-    //点击不同颜色的函数
-    function clickSpecial() {
-        if (num == 4) {
-            times == 2 ? (num++,times = 0) :(num = 4,times++);
-            console.log(times);
-        } else if (num == 5) {
-            times == 3 ? (num++,times = 0) :(num = 5,times++);
-        } else if (num == 6) {
-            times == 3 ? (num++,times = 0) :(num = 6,times++);
-        } else if (num == 7) {
-            times == 4 ? (num++,times = 0) :(num = 7,times++);
-        } else if (num == 8){
-            times == 5 ? (num++,times = 0) :(num = 8,times++);
-        } else if (num == 9) {
-            num = 9;
-        } else {
-            num++;
-        }
-        gameLevel.innerHTML = levelNum++;
-        colorBox.innerHTML = "";
-        creatColorBlock();
-        setColor();
-    }
-
-
 
     //判定辨别等级
     function JudgmentLevel() {
-        console.log(1);
         gameNum.innerHTML = gameLevel.innerHTML;
         if(gameLevel.innerHTML >=0 && gameLevel.innerHTML <= 15) {
             level.innerHTML = comments[0];
